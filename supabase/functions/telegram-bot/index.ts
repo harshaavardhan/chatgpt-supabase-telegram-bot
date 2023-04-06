@@ -17,15 +17,31 @@ import {
 } from "./utils.ts";
 
 const users: string[] = JSON.parse(Deno.env.get("USERS") || "[]");
+
+/*The script starts by defining two variables: users and botToken.
+
+The users variable is an array of strings that contains the Telegram usernames of the users who are authorized to access the bot. This array is initialized by parsing a JSON string retrieved from an environment variable named USERS. If the USERS environment variable is not defined, the array is initialized to an empty array.
+
+The botToken variable is a string that contains the API token of the Telegram bot. This variable is initialized by retrieving a string value from an environment variable named BOT_TOKEN. If the BOT_TOKEN environment variable is not defined, an empty string is used as a fallback value.
+*/
 const botToken = Deno.env.get("BOT_TOKEN") || "";
 
 if (!botToken) {
   throw new Error(`Please specify the Telegram Bot Token.`);
 }
 
+/* Next, the script checks whether the botToken variable is truthy (i.e., not empty or undefined). If botToken is falsy, the script throws an error with the message "Please specify the Telegram Bot Token."
+*/
+
 if (!users.length) {
   throw new Error(`Please specify the users that have access to the bot.`);
 }
+
+/* Similarly, the script checks whether the users array is not empty. If the users array is empty, the script throws an error with the message "Please specify the users that have access to the bot."
+*/
+
+/*Finally, the script defines a custom type BotContext that extends the Context type from the grammy library. The BotContext type includes an additional property named config, which is an object with a single boolean property named isOwner. This BotContext type will be used later to provide additional context to bot handlers.
+*/
 
 const bot = new Bot<BotContext>(botToken);
 
@@ -34,6 +50,9 @@ type BotContext = Context & {
     isOwner: boolean;
   };
 };
+
+/*Lastly, an instance of the Bot class is created using the botToken. The Bot class is a class provided by the grammy library and is used to create and manage a Telegram bot instance. The Bot instance is stored in the bot variable.
+*/
 
 bot.use(async (ctx, next) => {
   ctx.config = {
